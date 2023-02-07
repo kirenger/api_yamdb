@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 #Тут нужна моделька переопределенного юзера
-from .models import User
+from reviews.models import User
 import re
 
 

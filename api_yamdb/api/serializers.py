@@ -5,8 +5,7 @@ from rest_framework.exceptions import ValidationError
 from datetime import datetime as dt
 
 #Тут нужна моделька переопределенного юзера
-from .models import User
-from api.models import Category, Genre, Title
+from reviews.models import Category, Genre, Title, User
 from api.validators import validate_username, validate_email
 
 

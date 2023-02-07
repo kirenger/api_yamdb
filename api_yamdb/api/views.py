@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django.conf import settings
-from api.models import Category, Genre, Title
+from reviews.models import Category, Genre, Title
 from api.serializers import (
     CategorySerializer, GenreSerializer, TitleSerializer, TitlePostSerializer,
     SignUpSerializer, TokenSerializer

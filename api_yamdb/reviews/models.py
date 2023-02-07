@@ -13,10 +13,10 @@ class Genre(models.Model):
 
 class Title(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name='titles'
+        Category, on_delete=models.SET_NULL, related_name='titles'
     )
     genre = models.ForeignKey(
-        Genre, on_delete=models.CASCADE, related_name='genres'
+        Genre, on_delete=models.SET_NULL, related_name='genres'
     )
     name = models.CharField(max_length=256)
     year = models.IntegerField()
