@@ -10,14 +10,15 @@ from rest_framework import filters, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 from django.conf import settings
-from reviews.models import Category, Genre, Title
+from reviews.models import Category, Genre, Title, Review
 from api.serializers import (
     CategorySerializer, GenreSerializer, TitleSerializer, TitlePostSerializer,
-    SignUpSerializer, TokenSerializer
+    SignUpSerializer, TokenSerializer, CommentSerializer, ReviewSerializer
 )
-from api.permissions import IsAdminOrReadOnly
+from api.permissions import IsAdminOrReadOnly, ReviewPermission
 from api.filters import FilterTitle
 
 
@@ -114,3 +115,35 @@ def token(request):
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
     )
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    """Вьюсет для отзывов."""
+    serializer_class = ReviewSerializer
+    permission_classes = (ReviewPermission,)
+
+    def get_queryset(self):
+        title = get_object_or_404(Title, id=self.kwargs['title_id'])
+        return title.reviews.all()
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, id=self.kwargs['title_id'])
+        serializer.save(author=self.request.user, title=title)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """Вьюсет для комментариев."""
+    serializer_class = CommentSerializer
+    permission_classes = (ReviewPermission,)
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        review = get_object_or_404(Review, id=self.kwargs['review_id'])
+        return review.comments.all()
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(
+            Review, id=self.kwargs['review_id'],
+            title=self.kwargs['title_id']
+        )
+        serializer.save(author=self.request.user, review=review)

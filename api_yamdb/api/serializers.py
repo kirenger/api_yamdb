@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -5,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 from datetime import datetime as dt
 
 #Тут нужна моделька переопределенного юзера
-from reviews.models import Category, Genre, Title, User
+from reviews.models import Category, Genre, Title, User, Comment, Review
 from api.validators import validate_username, validate_email
 
 
@@ -97,3 +98,31 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'username')
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """Сериализатор для отзывов."""
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
+    title = serializers.SlugRelatedField(
+        slug_field='name', read_only=True
+    )
+
+    class Meta:
+        model = Review
+        fields = ('id', 'text', 'title', 'author', 'score', 'pub_date')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """Сериализатор для комментариев."""
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
+    review = serializers.SlugRelatedField(
+        slug_field='text', read_only=True
+    )
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'review', 'author', 'pub_date')
