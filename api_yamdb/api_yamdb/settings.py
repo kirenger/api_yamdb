@@ -108,7 +108,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
-<<<<<<< HEAD
 #AUTH_USER_MODEL = 'users.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
@@ -132,9 +131,11 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-=======
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5,
-}
->>>>>>> feature/models
+
+AUTH_USER_MODEL = 'reviews.User'
+
+USER = 'user'
+
+MODERATOR = 'moderator'
+
+ADMIN = 'admin'

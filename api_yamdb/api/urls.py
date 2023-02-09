@@ -3,17 +3,19 @@ from rest_framework.routers import SimpleRouter
 
 from api.views import (
     CategoryViewSet, GenreViewSet,
-    TitleViewSet, signup, token,
-    ReviewViewSet, CommentViewSet
+    TitleViewSet,ReviewViewSet,
+    CommentViewSet, UserViewSet,
+    signup, token
 )
 
 router_v1 = SimpleRouter()
 
-router_v1.register(r'titles', TitleViewSet)
-router_v1.register(r'genres', GenreViewSet)
-router_v1.register(r'categories', CategoryViewSet)
-router_v1.register(r'review', ReviewViewSet,)
-router_v1.register(r'comment', CommentViewSet)
+router_v1.register(r'titles', TitleViewSet, basename='titles')
+router_v1.register(r'genres', GenreViewSet, basename='genres')
+router_v1.register(r'categories', CategoryViewSet, basename='categories')
+router_v1.register(r'review', ReviewViewSet, basename='review')
+router_v1.register(r'comment', CommentViewSet, basename='comment')
+router_v1.register(r'users', UserViewSet, basename='users')
 
 auth_patterns = [
     path('signup/', signup),

@@ -1,5 +1,46 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+
+
+CHOICES = (
+        ('user', 'user'),
+        ('moderator', 'moderator'),
+        ('admin', 'admin'),
+    )
+
+
+class User(AbstractUser):
+    """Модель для работы с пользователями"""
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(
+        verbose_name='email',
+        max_length=254,
+        unique=True
+    )
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name =  models.CharField(max_length=150, blank=True)
+    bio = models.TextField(blank=True, null=True)
+    role = models.CharField(max_length=15, choices=CHOICES, default='user')
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'],
+                name="unique_fields"
+            ),
+        ]
+
+    @property
+    def is_admin(self):
+        return self.is_staff or self.role == settings.ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == settings.MODERATOR
+
+    def __str__(self) -> str:
+        return self.username
 
 
 class Category(models.Model):
@@ -14,10 +55,10 @@ class Genre(models.Model):
 
 class Title(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, related_name='titles'
+        Category, on_delete=models.CASCADE, related_name='titles'
     )
     genre = models.ForeignKey(
-        Genre, on_delete=models.SET_NULL, related_name='genres'
+        Genre, on_delete=models.CASCADE, related_name='genres'
     )
     name = models.CharField(max_length=256)
     year = models.IntegerField()
