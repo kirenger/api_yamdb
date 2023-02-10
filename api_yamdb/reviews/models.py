@@ -74,16 +74,10 @@ class Title(models.Model):
 class Review(models.Model):
     """Модель отзывов"""
     author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='Пользователь'
-    )
+        User, on_delete=models.CASCADE, related_name='reviews')
     title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='Отзыв'
+        Title, on_delete=models.CASCADE,
+        related_name='reviews'
     )
     text = models.TextField(
         verbose_name='Текст',
@@ -101,15 +95,16 @@ class Review(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-        ordering = ['-pub_date', ]
+        ordering = ('-pub_date',)
         constraints = (
             models.UniqueConstraint(
-                fields=['title', 'author'],
-                name='unique_review',
+                fields=('title', 'author',),
+                name='unique_author_title'
             ),
         )
+
+    def __str__(self):
+        return self.text[:15]
 
 
 class Comment(models.Model):
