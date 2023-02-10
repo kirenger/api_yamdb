@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.db.models import Avg
 from rest_framework import viewsets, mixins
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters, status
 from rest_framework.decorators import api_view, permission_classes, action
@@ -24,6 +24,7 @@ from api.permissions import (
     SelfEditUserOnlyPermission
 )
 from api.filters import FilterTitle
+
 
 class CreateListDestroy(
     mixins.CreateModelMixin,

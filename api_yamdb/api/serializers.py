@@ -52,6 +52,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
         slug_field='slug', queryset=Genre.objects.all(),
         many=True
     )
+
     class Meta():
         fields = '__all__'
         model = Title
@@ -60,7 +61,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     confirmation_code = serializers.CharField(allow_blank=False)
     username = serializers.CharField(
-        max_length=150, 
+        max_length=150,
         allow_blank=False,
         validators=[validate_username]
     )

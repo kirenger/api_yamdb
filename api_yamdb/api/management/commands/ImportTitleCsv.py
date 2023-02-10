@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 
 from api.models import Title
 
+
 class Command(BaseCommand):
     help = 'Импорт данных из csv в таблицу Title'
 
@@ -17,8 +18,8 @@ class Command(BaseCommand):
             next(reader)
             for row in reader:
                 Title.objects.create(
-                    id = row[0],
-                    name = row[1],
-                    year = row[2],
-                    category_id = row[3]
+                    id=row[0],
+                    name=row[1],
+                    year=row[2],
+                    category_id=row[3]
                 )

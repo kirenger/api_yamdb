@@ -3,7 +3,7 @@ from reviews.models import User
 import re
 
 
-def validate_username (value):
+def validate_username(value):
     if value == 'me':
         raise ValidationError('Недопустимое имя пользователя!')
     elif User.objects.filter(username=value).exists():
@@ -16,7 +16,7 @@ def validate_username (value):
         )
 
 
-def validate_email (value):
+def validate_email(value):
     if User.objects.filter(email=value).exists():
         raise ValidationError(
             'Пользователь с такой почтой уже зарегестрирован'

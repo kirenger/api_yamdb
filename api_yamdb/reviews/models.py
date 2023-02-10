@@ -9,16 +9,17 @@ from django.conf import settings
 
 
 CHOICES = (
-        ('user', 'user'),
-        ('moderator', 'moderator'),
-        ('admin', 'admin'),
-    )
+    ('user', 'user'),
+    ('moderator', 'moderator'),
+    ('admin', 'admin'),
+)
 
 
 class User(AbstractUser):
     """Модель для работы с пользователями"""
-    username = models.CharField(max_length=150, unique=True,
-    validators=[RegexValidator(regex='^[\w.@+-]+')]
+    username = models.CharField(
+        max_length=150, unique=True,
+        validators=[RegexValidator(regex='^[\w.@+-]+')]
     )
     email = models.EmailField(
         verbose_name='email',

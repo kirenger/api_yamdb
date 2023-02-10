@@ -1,5 +1,6 @@
 from rest_framework.routers import SimpleRouter
 
+
 class NoPutRouter(SimpleRouter):
     def get_method_map(self, viewset, method_map):
 
