@@ -19,7 +19,7 @@ class User(AbstractUser):
     """Модель для работы с пользователями"""
     username = models.CharField(
         max_length=150, unique=True,
-        validators=[RegexValidator(regex='^[\w.@+-]+')]
+        validators=[RegexValidator(regex=r'^[\w.@+-]+')]
     )
     email = models.EmailField(
         verbose_name='email',
@@ -27,9 +27,10 @@ class User(AbstractUser):
         unique=True
     )
     first_name = models.CharField(max_length=150, blank=True)
-    last_name =  models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
     bio = models.TextField(blank=True, null=True)
     role = models.CharField(max_length=15, choices=CHOICES, default='user')
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
