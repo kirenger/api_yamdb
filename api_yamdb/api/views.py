@@ -3,7 +3,7 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.db.models import Avg
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters, status
@@ -25,8 +25,16 @@ from api.permissions import (
 )
 from api.filters import FilterTitle
 
+class CreateListDestroy(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
+    pass
 
-class CategoryViewSet(viewsets.ModelViewSet):
+
+class CategoryViewSet(CreateListDestroy):
     queryset = Category.objects.all()
     pagination_class = LimitOffsetPagination
     serializer_class = CategorySerializer
@@ -37,7 +45,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'slug')
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(CreateListDestroy):
     queryset = Genre.objects.all()
     pagination_class = LimitOffsetPagination
     serializer_class = GenreSerializer
@@ -51,7 +59,6 @@ class GenreViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     pagination_class = LimitOffsetPagination
-    serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = FilterTitle
@@ -135,23 +142,26 @@ class UserViewSet(viewsets.ModelViewSet):
 @permission_classes([AllowAny])
 def signup(request):
     serializer = SignUpSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    if not User.objects.filter(
-        username=request.data['username'], email=request.data['email']
+    if User.objects.filter(
+        username=request.data.get('username'), email=request.data.get('email')
     ).exists():
+        return Response(request.data, status=status.HTTP_200_OK)
+    else:
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-    user = User.objects.get(
-        username=request.data['username'], email=request.data['email']
-    )
-    conformation_code = default_token_generator.make_token(user)
-    send_mail(
-        f'Привет, {str(user.username)}! Твой код находится тут!',
-        conformation_code,
-        settings.EMAIL_FOR_AUTH_LETTERS,
-        [request.data['email']],
-        fail_silently=True
-    )
-    return Response(serializer.data, status=status.HTTP_200_OK)
+        user = User.objects.get(
+            username=request.data.get('username'),
+            email=request.data.get('email')
+        )
+        conformation_code = default_token_generator.make_token(user)
+        send_mail(
+            f'Привет, {str(user.username)}! Твой код находится тут!',
+            conformation_code,
+            settings.EMAIL_FOR_AUTH_LETTERS,
+            [request.data['email']],
+            fail_silently=True
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def get_tokens_for_user(user):

@@ -44,21 +44,21 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(unique=True, max_length=256)
     slug = models.SlugField(unique=True, max_length=50)
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(unique=True, max_length=256)
     slug = models.SlugField(unique=True, max_length=50)
 
 
 class Title(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name='titles'
+        Category, on_delete=models.SET_NULL, null=True, related_name='titles'
     )
-    genre = models.ForeignKey(
-        Genre, on_delete=models.CASCADE, related_name='genres'
+    genre = models.ManyToManyField(
+        Genre, related_name='genres'
     )
     name = models.CharField(max_length=256)
     year = models.IntegerField()
@@ -98,12 +98,12 @@ class Review(models.Model):
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         ordering = ['-pub_date', ]
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
                 fields=['title', 'author'],
                 name='unique_review',
             ),
-        ]
+        )
 
 
 class Comment(models.Model):

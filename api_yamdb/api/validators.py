@@ -1,5 +1,4 @@
 from rest_framework.exceptions import ValidationError
-#Тут нужна моделька переопределенного юзера
 from reviews.models import User
 import re
 
@@ -15,7 +14,6 @@ def validate_username (value):
         raise ValidationError(
             'Username не соответствует требованиям!'
         )
-
 
 
 def validate_email (value):

@@ -4,7 +4,6 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from datetime import datetime as dt
 
-#Тут нужна моделька переопределенного юзера
 from reviews.models import Category, Genre, Title, User, Comment, Review
 from api.validators import validate_username, validate_email
 
@@ -34,8 +33,9 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year', 'description', 'rating',
-                  'category', 'genre')
+        fields = (
+            'id', 'name', 'year', 'description', 'rating', 'category', 'genre'
+        )
 
     def validate_year(self, value):
         year_today = dt.date.today().year
@@ -46,19 +46,14 @@ class TitleSerializer(serializers.ModelSerializer):
 
 class TitlePostSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
-        read_only=True, slug_field='slug'
+        slug_field='slug', queryset=Category.objects.all()
     )
     genre = serializers.SlugRelatedField(
-        read_only=True, slug_field='slug'
+        slug_field='slug', queryset=Genre.objects.all(),
+        many=True
     )
     class Meta():
-        fields = (
-            'category',
-            'genre',
-            'name',
-            'year',
-            'description',
-        )
+        fields = '__all__'
         model = Title
 
 
