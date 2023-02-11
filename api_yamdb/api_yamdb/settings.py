@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'djoser',
     'api',
     'reviews',
+    'users',
     'rest_framework_simplejwt',
 ]
 
@@ -131,7 +132,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-AUTH_USER_MODEL = 'reviews.User'
+AUTH_USER_MODEL = 'users.User'
 
 USER = 'user'
 

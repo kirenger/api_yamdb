@@ -1,54 +1,8 @@
 from django.db import models
 from django.core.validators import (
-    MaxValueValidator, MinValueValidator, RegexValidator
+    MaxValueValidator, MinValueValidator
 )
-from django.contrib.auth.models import AbstractUser
-
-
-from django.conf import settings
-
-
-CHOICES = (
-    ('user', 'user'),
-    ('moderator', 'moderator'),
-    ('admin', 'admin'),
-)
-
-
-class User(AbstractUser):
-    """Модель для работы с пользователями"""
-    username = models.CharField(
-        max_length=150, unique=True,
-        validators=[RegexValidator(regex=r'^[\w.@+-]+')]
-    )
-    email = models.EmailField(
-        verbose_name='email',
-        max_length=254,
-        unique=True
-    )
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    bio = models.TextField(blank=True, null=True)
-    role = models.CharField(max_length=15, choices=CHOICES, default='user')
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['username', 'email'],
-                name="unique_fields"
-            ),
-        ]
-
-    @property
-    def is_admin(self):
-        return self.is_staff or self.role == settings.ADMIN
-
-    @property
-    def is_moderator(self):
-        return self.role == settings.MODERATOR
-
-    def __str__(self) -> str:
-        return self.username
+from users.models import User
 
 
 class Category(models.Model):
@@ -74,7 +28,7 @@ class Title(models.Model):
 
 
 class Review(models.Model):
-    """Модель отзывов"""
+    """Модель отзывов."""
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews')
     title = models.ForeignKey(
@@ -110,7 +64,7 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    """Модель комментириев"""
+    """Модель комментириев."""
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

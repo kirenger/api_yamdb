@@ -1,21 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Comment, Genre, Review, Title, User
-
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk',
-        'username',
-        'first_name',
-        'last_name',
-        'email',
-        'bio',
-        'role'
-    )
-    list_editable = ('role',)
-    search_fields = ('username', 'role')
-    empty_value_display = '-пусто-'
+from .models import Category, Comment, Genre, Review, Title
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -70,7 +55,6 @@ class TitleAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(User, UserAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Genre, GenreAdmin)
