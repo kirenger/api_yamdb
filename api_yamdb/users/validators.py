@@ -9,14 +9,14 @@ from django.utils.functional import SimpleLazyObject
 
 def validate_ipv6_address(value):
     if not is_valid_ipv6_address(value):
-        raise ValidationError(_('Enter a valid IPv6 address.'), code='invalid')
+        raise ValidationError('Enter a valid IPv6 address.', code='invalid')
 
 
 def validate_ipv4_address(value):
     try:
         ipaddress.IPv4Address(value)
     except ValueError:
-        raise ValidationError(_('Enter a valid IPv4 address.'), code='invalid')
+        raise ValidationError('Enter a valid IPv4 address.', code='invalid')
     else:
         # Leading zeros are forbidden to avoid ambiguity with the octal
         # notation. This restriction is included in Python 3.9.5+.
@@ -26,7 +26,7 @@ def validate_ipv4_address(value):
             for octet in value.split('.')
         ):
             raise ValidationError(
-                _('Enter a valid IPv4 address.'),
+                'Enter a valid IPv4 address.',
                 code='invalid',
             )
 
@@ -38,7 +38,10 @@ def validate_ipv46_address(value):
         try:
             validate_ipv6_address(value)
         except ValidationError:
-            raise ValidationError(_('Enter a valid IPv4 or IPv6 address.'), code='invalid')
+            raise ValidationError(
+                'Enter a valid IPv4 or IPv6 address.',
+                code='invalid'
+            )
 
 def _lazy_re_compile(regex, flags=0):
     """Lazily compile a regex with flags."""
@@ -47,7 +50,7 @@ def _lazy_re_compile(regex, flags=0):
         if isinstance(regex, str):
             return re.compile(regex, flags)
         else:
-            assert not flags, "flags must be empty if regex is passed pre-compiled"
+            assert not flags, "flags must be empty"
             return regex
     return SimpleLazyObject(_compile)
 
@@ -57,12 +60,14 @@ class EmailValidator:
     message = 'Enter a valid email address.'
     code = 'invalid'
     user_regex = _lazy_re_compile(
-        r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*\Z"  # dot-atom
-        r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-\011\013\014\016-\177])*"\Z)',  # quoted-string
+        r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*\Z"
+        r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]'
+        r'|\\[\001-\011\013\014\016-\177])*"\Z)', 
         re.IGNORECASE)
     domain_regex = _lazy_re_compile(
         # max length for domain name labels is 63 characters per RFC 1034
-        r'((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+)(?:[A-Z0-9-]{2,63}(?<!-))\Z',
+        r'((?:[A-Z0-9](?:[A-Z0-9-]{0,61}'
+        r'[A-Z0-9])?\.)+)(?:[A-Z0-9-]{2,63}(?<!-))\Z',
         re.IGNORECASE)
     literal_regex = _lazy_re_compile(
         # literal form, ipv4 or ipv6 address (SMTP 4.1.3)
