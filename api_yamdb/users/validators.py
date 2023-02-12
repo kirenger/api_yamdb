@@ -63,7 +63,7 @@ class EmailValidator:
     user_regex = _lazy_re_compile(
         r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*\Z"
         r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]'
-        r'|\\[\001-\011\013\014\016-\177])*"\Z)', 
+        r'|\\[\001-\011\013\014\016-\177])*"\Z)',
         re.IGNORECASE)
     domain_regex = _lazy_re_compile(
         # max length for domain name labels is 63 characters per RFC 1034
