@@ -23,12 +23,16 @@ class User(AbstractUser):
         verbose_name='email',
         max_length=254,
         unique=True,
-        validators =[validate_email]
+        validators=[validate_email]
     )
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     bio = models.TextField(blank=True, null=True)
-    role = models.CharField(max_length=15, choices=CHOICES, default=settings.USER)
+    role = models.CharField(
+        max_length=15,
+        choices=CHOICES,
+        default=settings.USER
+    )
 
     @property
     def is_admin(self):

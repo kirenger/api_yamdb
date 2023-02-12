@@ -22,7 +22,7 @@ class Genre(models.Model):
         unique=True,
         max_length=256,
         verbose_name='Название жанра'
-        )
+    )
     slug = models.SlugField(unique=True, max_length=50)
 
 
@@ -38,7 +38,7 @@ class Title(models.Model):
         Genre, related_name='genres'
     )
     name = models.CharField(
-        max_length=256, 
+        max_length=256,
         verbose_name='Название произведения'
     )
     year = models.IntegerField(

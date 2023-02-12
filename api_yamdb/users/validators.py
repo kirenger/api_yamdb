@@ -43,6 +43,7 @@ def validate_ipv46_address(value):
                 code='invalid'
             )
 
+
 def _lazy_re_compile(regex, flags=0):
     """Lazily compile a regex with flags."""
     def _compile():
@@ -92,8 +93,8 @@ class EmailValidator:
         if not self.user_regex.match(user_part):
             raise ValidationError(self.message, code=self.code)
 
-        if (domain_part not in self.domain_whitelist and
-                not self.validate_domain_part(domain_part)):
+        if (domain_part not in self.domain_whitelist
+                and not self.validate_domain_part(domain_part)):
             # Try for possible IDN domain-part
             try:
                 domain_part = domain_part.encode('idna').decode('ascii')
@@ -120,10 +121,10 @@ class EmailValidator:
 
     def __eq__(self, other):
         return (
-            isinstance(other, EmailValidator) and
-            (self.domain_whitelist == other.domain_whitelist) and
-            (self.message == other.message) and
-            (self.code == other.code)
+            isinstance(other, EmailValidator)
+            and (self.domain_whitelist == other.domain_whitelist)
+            and (self.message == other.message)
+            and (self.code == other.code)
         )
 
 
