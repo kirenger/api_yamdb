@@ -60,24 +60,12 @@ class TitlePostSerializer(serializers.ModelSerializer):
         model = Title
 
 
-class TokenSerializer(serializers.ModelSerializer):
+class TokenSerializer(serializers.Serializer):
     confirmation_code = serializers.CharField(allow_blank=False)
     username = serializers.CharField(
         max_length=150,
-        allow_blank=False,
-        validators=[validate_username]
+        allow_blank=False
     )
-
-    class Meta:
-        model = User
-        fields = ('username', 'confirmation_code')
-
-    def validate(self, data):
-        user = get_object_or_404(User, username=data['username'])
-        confirmation_code = default_token_generator.make_token(user)
-        if str(confirmation_code) != data['confirmation_code']:
-            raise ValidationError('Неверный код подтверждения')
-        return data
 
 
 class SignUpSerializer(serializers.ModelSerializer):
